@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import { extractResumeText, ResumeUnreadableError } from '../../../src/main/profile/resumeText'
 import { buildProfile, summarizeBack } from '../../../src/main/profile/profileBuilder'
 import { addRule, applyCorrection } from '../../../src/main/profile/rules'
+import { LlmOutputError } from '../../../src/main/llm/llm'
 import { createFakeLlm } from '../llm/fakeLlm'
 import type { Profile, Rule } from '../../../src/shared/types'
 
@@ -150,6 +151,38 @@ describe('addRule', () => {
     expect(rules).toHaveLength(1)
     expect(rules[0].forbiddenTerms).toEqual(['crypto', 'web3'])
     expect(rules[0].text).toBe("don't mention crypto or web3")
+  })
+})
+
+describe('addRule prompt and validation', () => {
+  it('shows existing rules to the model and asks for variants', async () => {
+    const llm = createFakeLlm([
+      JSON.stringify({ topic: 'crypto', forbiddenTerms: ['crypto', 'nft'] })
+    ])
+    await addRule(
+      llm,
+      [{ topic: 'crypto', text: 'x', forbiddenTerms: ['crypto', 'web3'] }],
+      'also no NFTs'
+    )
+    expect(llm.calls[0].prompt).toContain('crypto: crypto, web3')
+    expect(llm.calls[0].system).toMatch(/COMPLETE term list/)
+    expect(llm.calls[0].system).toMatch(/variants, plurals/)
+  })
+
+  it('retries on empty terms or topic, then throws LlmOutputError', async () => {
+    const bad = [
+      JSON.stringify({ topic: 'crypto', forbiddenTerms: [] }),
+      JSON.stringify({ topic: ' ', forbiddenTerms: ['x'] })
+    ]
+    await expect(addRule(createFakeLlm(bad), [], 'no crypto')).rejects.toBeInstanceOf(
+      LlmOutputError
+    )
+    const llm = createFakeLlm([
+      bad[0],
+      JSON.stringify({ topic: 'crypto', forbiddenTerms: ['crypto'] })
+    ])
+    expect(await addRule(llm, [], 'no crypto')).toHaveLength(1)
+    expect(llm.calls).toHaveLength(2)
   })
 })
 
