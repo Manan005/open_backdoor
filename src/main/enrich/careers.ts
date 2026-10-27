@@ -1,4 +1,5 @@
 import type { Fetcher } from '../net/http'
+import { isCompanyHost } from '../sources/hnHiring'
 
 export interface OpenRole { title: string; location: string | null; remote: boolean | null; url: string }
 
@@ -27,6 +28,12 @@ export function detectBoards(html: string): BoardRef[] {
   return out
 }
 
+// Sites hosted on these platforms say nothing about the company's own slug.
+export const HOSTING_PLATFORM_SUFFIXES = [
+  'vercel.app', 'netlify.app', 'github.io', 'notion.site', 'webflow.io', 'framer.website', 'framer.app',
+  'carrd.co', 'wixsite.com', 'herokuapp.com', 'pages.dev', 'web.app', 'firebaseapp.com'
+]
+
 // "acme" from https://www.acme.ai/about; handles simple second-level suffixes like co.uk.
 export function domainLabel(website: string | null): string | null {
   if (!website) return null
@@ -36,6 +43,7 @@ export function domainLabel(website: string | null): string | null {
   } catch {
     return null
   }
+  if (!isCompanyHost(host) || HOSTING_PLATFORM_SUFFIXES.some((h) => host === h || host.endsWith('.' + h))) return null
   const parts = host.replace(/^www\./, '').split('.')
   if (parts.length < 2) return null
   const label = parts.length >= 3 && ['co', 'com', 'org', 'net', 'ac'].includes(parts[parts.length - 2])
@@ -92,7 +100,43 @@ function mapRoles(ats: Ats, data: unknown): OpenRole[] {
   return roles
 }
 
-async function queryBoard(fetch: Fetcher, board: BoardRef): Promise<OpenRole[] | null> {
+const norm = (s: string): string => s.toLowerCase().replace(/[^a-z0-9]/g, '')
+
+// A guessed slug is only trusted when it plausibly belongs to this company.
+function slugFitsName(slug: string, name: string): boolean {
+  const n = norm(name)
+  const sl = norm(slug)
+  return !!n && !!sl && (n === sl || n.startsWith(sl) || sl.startsWith(n))
+}
+
+function namesMatch(boardName: string, name: string): boolean {
+  const a = norm(boardName)
+  const b = norm(name)
+  return !!a && !!b && (a.includes(b) || b.includes(a))
+}
+
+async function getText(fetch: Fetcher, url: string): Promise<string | null> {
+  try {
+    const res = await fetch(url)
+    return res.status >= 200 && res.status < 300 ? res.text : null
+  } catch {
+    return null
+  }
+}
+
+// The name the board publishes about itself, where the API has one (Greenhouse, Workable).
+async function boardName(fetch: Fetcher, board: BoardRef, body: string): Promise<string | null> {
+  let text: string | null = body
+  if (board.ats === 'greenhouse') text = await getText(fetch, `https://boards-api.greenhouse.io/v1/boards/${encodeURIComponent(board.slug)}`)
+  else if (board.ats !== 'workable') return null
+  try {
+    return str((JSON.parse(text ?? '') as Json).name)
+  } catch {
+    return null
+  }
+}
+
+async function queryBoard(fetch: Fetcher, board: BoardRef, guessFor: string | null): Promise<OpenRole[] | null> {
   let res
   try {
     res = await fetch(boardUrl(board))
@@ -101,7 +145,12 @@ async function queryBoard(fetch: Fetcher, board: BoardRef): Promise<OpenRole[] |
   }
   if (res.status < 200 || res.status >= 300) return null // 404 and other errors: try the next board
   try {
-    return mapRoles(board.ats, JSON.parse(res.text))
+    const roles = mapRoles(board.ats, JSON.parse(res.text))
+    if (guessFor !== null) {
+      const name = await boardName(fetch, board, res.text)
+      if (name && !namesMatch(name, guessFor)) return null
+    }
+    return roles
   } catch {
     return null
   }
@@ -113,12 +162,14 @@ export async function findOpenRoles(
   company: { name: string; website: string | null; careersHtml: string | null }
 ): Promise<OpenRole[]> {
   let boards = company.careersHtml ? detectBoards(company.careersHtml) : []
+  let guessed = false
   if (boards.length === 0) {
     const label = domainLabel(company.website)
-    boards = label ? ALL_ATS.map((ats) => ({ ats, slug: label })) : []
+    boards = label && slugFitsName(label, company.name) ? ALL_ATS.map((ats) => ({ ats, slug: label })) : []
+    guessed = true
   }
   for (const board of boards) {
-    const roles = await queryBoard(fetch, board)
+    const roles = await queryBoard(fetch, board, guessed ? company.name : null)
     if (roles) return roles
   }
   return []
