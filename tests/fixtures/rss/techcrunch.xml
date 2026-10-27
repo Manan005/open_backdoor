@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>Venture Capital News | TechCrunch</title>
+	<atom:link href="https://techcrunch.com/category/venture/feed/" rel="self" type="application/rss+xml" />
+	<link>https://techcrunch.com/category/venture/</link>
+	<description>Startup and Technology News</description>
+	<lastBuildDate>Sat, 24 Oct 2026 14:41:57 +0000</lastBuildDate>
+	<language>en-US</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.9.10</generator>
+
+<image>
+	<url>https://techcrunch.com/wp-content/uploads/2015/02/cropped-cropped-favicon-gradient.png?w=32</url>
+	<title>Venture Capital News | TechCrunch</title>
+	<link>https://techcrunch.com/category/venture/</link>
+	<width>32</width>
+	<height>32</height>
+</image> 
+	<item>
+		<title>VCs, Superhuman Mail founder share red flags about product-market fit</title>
+		<link>https://techcrunch.com/2026/10/23/vcs-superhuman-mail-founder-share-red-flags-about-product-market-fit/</link>
+		
+		<dc:creator><![CDATA[Dominic-Madori Davis]]></dc:creator>
+		<pubDate>Fri, 23 Oct 2026 20:57:13 +0000</pubDate>
+				<category><![CDATA[Startups]]></category>
+		<category><![CDATA[Venture]]></category>
+		<category><![CDATA[TechCrunch Disrupt]]></category>
+		<guid isPermaLink="false">https://techcrunch.com/?p=3181268</guid>
+
+					<description><![CDATA[Top investors from Iconiq and Sapphire Ventures, along with Rahul Vohra, the founder of Superhuman Mail, share the do's and don'ts for building hit products.]]></description>
+		
+		
+		
+			</item>
+<item>
+		<title>Carta and NewView partner, hoping to entice more startups to let employees sell shares early</title>
+		<link>https://techcrunch.com/2026/10/23/carta-and-newview-partner-hoping-to-entice-more-startups-to-let-employees-sell-shares-early/</link>
+		
+		<dc:creator><![CDATA[Marina Temkin]]></dc:creator>
+		<pubDate>Fri, 23 Oct 2026 19:25:13 +0000</pubDate>
+				<category><![CDATA[Startups]]></category>
+		<category><![CDATA[Venture]]></category>
+		<category><![CDATA[Carta]]></category>
+		<category><![CDATA[NewView Capital]]></category>
+		<guid isPermaLink="false">https://techcrunch.com/?p=3181257</guid>
+
+					<description><![CDATA[A new program wants to encourage more startups to allow workers to cash out early by making it easier to transact tender offers.]]></description>
+		
+		
+		
+			</item>
+<item>
+		<title>What some of Anthropic’s backers are worth before its IPO</title>
+		<link>https://techcrunch.com/2026/10/23/what-some-of-anthropics-backers-are-reportedly-worth-before-its-ipo/</link>
+		
+		<dc:creator><![CDATA[Marina Temkin]]></dc:creator>
+		<pubDate>Fri, 23 Oct 2026 16:02:43 +0000</pubDate>
+				<category><![CDATA[Venture]]></category>
+		<category><![CDATA[Anthropic]]></category>
+		<category><![CDATA[Eric Schmidt]]></category>
+		<category><![CDATA[ICONIQ]]></category>
+		<category><![CDATA[IPO]]></category>
+		<category><![CDATA[menlo ventures]]></category>
+		<category><![CDATA[Sequoia Capital]]></category>
+		<category><![CDATA[sound ventures]]></category>
+		<category><![CDATA[Spark Capital]]></category>
+		<guid isPermaLink="false">https://techcrunch.com/?p=3181130</guid>
+
+					<description><![CDATA[Early-stage and follow-on investors in the AI lab are already sitting on major paper returns.]]></description>
+		
+		
+		
+			</item>
+<item>
+		<title>Warhound raises $200M to engineer war dogs and arm them with Anduril gear</title>
+		<link>https://techcrunch.com/2026/10/22/ben-lamm-raises-200m-for-warhound-to-engineer-war-dogs-and-arm-them-with-anduril-gear/</link>
+		
+		<dc:creator><![CDATA[Dominic-Madori Davis]]></dc:creator>
+		<pubDate>Thu, 22 Oct 2026 23:15:00 +0000</pubDate>
+				<category><![CDATA[Fundraising]]></category>
+		<category><![CDATA[Startups]]></category>
+		<category><![CDATA[Venture]]></category>
+		<category><![CDATA[Ben Lamm]]></category>
+		<category><![CDATA[defense]]></category>
+		<category><![CDATA[Palmer Luckey]]></category>
+		<guid isPermaLink="false">https://techcrunch.com/?p=3180969</guid>
+
+					<description><![CDATA[Warhound, the brainchild of Ben Lamm and Palmer Luckey, emerges from stealth to genetically engineer dogs for military and law enforcement. ]]></description>
+		
+		
+		
+			</item>
+<item>
+		<title>As blockchain investing falls out of vogue, a16z Crypto rebrands as a16z Frontier</title>
+		<link>https://techcrunch.com/2026/10/22/as-blockchain-investing-falls-out-of-vogue-a16z-crypto-rebrands-as-a16z-frontier/</link>
+		
+		<dc:creator><![CDATA[Marina Temkin]]></dc:creator>
+		<pubDate>Thu, 22 Oct 2026 22:34:54 +0000</pubDate>
+				<category><![CDATA[Venture]]></category>
+		<category><![CDATA[a16z]]></category>
+		<category><![CDATA[a16z crypto]]></category>
+		<category><![CDATA[In Brief]]></category>
+		<guid isPermaLink="false">https://techcrunch.com/?p=3180975</guid>
+
+					<description><![CDATA[The digital asset unit, helmed by Chris Dixon, broadens its scope.]]></description>
+		
+		
+		
+			</item>
+	</channel>
+</rss>
