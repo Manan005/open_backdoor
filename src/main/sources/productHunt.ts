@@ -26,13 +26,34 @@ function toCandidate(l: Launch): Candidate {
   }
 }
 
+const MAX_RESOLUTIONS = 30
+
+function isProductHuntHost(url: string): boolean {
+  try {
+    const host = new URL(url).hostname.toLowerCase()
+    return host === 'producthunt.com' || host.endsWith('.producthunt.com')
+  } catch {
+    return false
+  }
+}
+
 // Product Hunt's own pages and redirects are never the company's site.
 function isCompanyWebsite(website: string): boolean {
   try {
-    const host = new URL(website).hostname.toLowerCase()
-    return isCompanyHost(host) && host !== 'producthunt.com' && !host.endsWith('.producthunt.com')
+    return isCompanyHost(new URL(website).hostname.toLowerCase()) && !isProductHuntHost(website)
   } catch {
     return false
+  }
+}
+
+// The fetcher follows redirects and reports the final url. Any failure (HTTP error, timeout,
+// BlockedDomainError when the redirect lands on a blocked host) means the post is skipped.
+async function resolveRedirect(ctx: SourceContext, url: string): Promise<string | null> {
+  try {
+    const res = await ctx.fetch(url)
+    return res.status >= 200 && res.status < 400 ? res.url : null
+  } catch {
+    return null
   }
 }
 
@@ -51,9 +72,18 @@ async function viaGraphql(ctx: SourceContext, token: string): Promise<Candidate[
   }
   const out: Candidate[] = []
   const seen = new Set<string>()
+  let resolved = 0
   for (const { node } of body.data?.posts?.edges ?? []) {
-    const website = node.website?.trim() || null
-    if (!node.name || !website || !isCompanyWebsite(website)) continue
+    let website = node.website?.trim() || null
+    if (!node.name || !website) continue
+    if (isProductHuntHost(website)) {
+      // v2 returns a producthunt.com/r/<code> redirect, not the company URL: follow it.
+      if (resolved >= MAX_RESOLUTIONS) continue
+      resolved++
+      website = await resolveRedirect(ctx, website)
+      if (!website) continue
+    }
+    if (!isCompanyWebsite(website)) continue
     const key = domainKey(website, node.name)
     if (seen.has(key)) continue
     seen.add(key)
@@ -70,6 +100,9 @@ const decode = (s: string): string =>
   s.replace(/&(amp|lt|gt|quot|apos|#39);/g, (_m, n: string) => ({ amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", '#39': "'" })[n] ?? _m)
 
 // The Atom feed has no company website (only Product Hunt links), so these candidates are name-only.
+// This path is deliberately exempt from "skip missing website": the launched signal can merge into a
+// same-name candidate from another source during dedupe, and Task 15 drops those still lacking a
+// website before research.
 async function viaFeed(ctx: SourceContext): Promise<Candidate[]> {
   const res = await ctx.fetch(FEED_URL)
   if (res.status < 200 || res.status >= 300) throw new Error(`${FEED_URL} answered ${res.status}`)

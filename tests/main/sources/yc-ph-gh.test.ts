@@ -99,9 +99,31 @@ describe('yc source', () => {
 
 describe('product hunt source', () => {
   it('ph uses graphql with token', async () => {
-    const f = fakeFetch({ [PH_GQL]: fx('ph/graphql.json') })
+    const R = (c: string): string => `https://www.producthunt.com/r/${c}?utm_campaign=producthunt-api&utm_medium=api-v2`
+    const base = fakeFetch({ [PH_GQL]: fx('ph/graphql.json') })
+    // Redirect links resolve to the company's final url; 104/105 land on non-company hosts, 106 fails.
+    const finals: Record<string, string> = {
+      [R('101')]: 'https://paddock.dev/?ref=producthunt',
+      [R('102')]: 'https://www.revix.ai/',
+      [R('103')]: 'https://revix.ai/dashboard',
+      [R('104')]: 'https://github.com/openloom/openloom',
+      [R('105')]: 'https://notely.notion.site/'
+    }
+    const f: Fetcher & { calls: Call[] } = Object.assign(
+      (async (url, init) => {
+        if (url in finals) {
+          f.calls.push({ url, init })
+          return { status: 200, text: '<html></html>', url: finals[url] }
+        }
+        if (url === R('106')) {
+          f.calls.push({ url, init })
+          throw new Error('timeout')
+        }
+        return base(url, init)
+      }) as Fetcher,
+      { calls: base.calls }
+    )
     const out = await productHuntSource.fetchCandidates(ctx(f, { 'producthunt.token': 'tok-123' }))
-    expect(f.calls).toHaveLength(1)
     const call = f.calls[0]
     expect(call.init?.method).toBe('POST')
     expect(call.init?.headers?.Authorization).toBe('Bearer tok-123')
@@ -110,8 +132,11 @@ describe('product hunt source', () => {
     expect(sent.query).toContain('postedAfter: "2026-10-24T12:00:00.000Z"')
     expect(sent.query).toContain('first: 50')
 
-    // Dropped: github.com and notion.site sites, missing website, duplicate revix.ai domain.
-    expect(out.map((c) => c.name)).toEqual(['Paddock', 'Revix AI', 'Lumen Ledger'])
+    // Dropped: github.com and notion.site finals, missing website, duplicate revix.ai domain,
+    // and Lumen Ledger whose redirect failed. Each redirect link was resolved once.
+    expect(out.map((c) => c.name)).toEqual(['Paddock', 'Revix AI'])
+    expect(out[1].website).toBe('https://www.revix.ai/')
+    expect(f.calls.filter((c) => c.url.includes('/r/'))).toHaveLength(6)
     expect(out[0].website).toBe('https://paddock.dev/?ref=producthunt')
     expect(out[0].signals).toEqual([
       {
@@ -131,6 +156,7 @@ describe('product hunt source', () => {
     expect(f.calls[0].init?.headers?.Authorization).toBeUndefined()
     expect(out.length).toBeGreaterThan(3)
     const revix = out.find((c) => c.name === 'Revix AI')!
+    // Intentional: the feed has no company website; name-only candidates may merge during dedupe.
     expect(revix.website).toBeNull()
     expect(revix.signals[0]).toMatchObject({
       kind: 'launched',

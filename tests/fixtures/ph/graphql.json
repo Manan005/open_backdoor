@@ -2,13 +2,13 @@
   "data": {
     "posts": {
       "edges": [
-        { "node": { "name": "Paddock", "tagline": "Computers and sandboxes for your agents", "website": "https://paddock.dev/?ref=producthunt", "url": "https://www.producthunt.com/products/paddock-2", "createdAt": "2026-10-26T19:46:50Z" } },
-        { "node": { "name": "Revix AI", "tagline": "AI code review that learns your repo's own rules", "website": "https://www.revix.ai", "url": "https://www.producthunt.com/products/revix-ai-2", "createdAt": "2026-10-26T14:29:10Z" } },
-        { "node": { "name": "Revix Dashboard", "tagline": "Team analytics for Revix", "website": "https://revix.ai/dashboard", "url": "https://www.producthunt.com/products/revix-dashboard", "createdAt": "2026-10-26T15:00:00Z" } },
-        { "node": { "name": "OpenLoom", "tagline": "Open-source async video for teams", "website": "https://github.com/openloom/openloom", "url": "https://www.producthunt.com/products/openloom", "createdAt": "2026-10-25T09:12:00Z" } },
-        { "node": { "name": "Notely Pages", "tagline": "Publish notes as websites", "website": "https://notely.notion.site", "url": "https://www.producthunt.com/products/notely-pages", "createdAt": "2026-10-25T08:00:00Z" } },
+        { "node": { "name": "Paddock", "tagline": "Computers and sandboxes for your agents", "website": "https://www.producthunt.com/r/101?utm_campaign=producthunt-api&utm_medium=api-v2", "url": "https://www.producthunt.com/products/paddock-2", "createdAt": "2026-10-26T19:46:50Z" } },
+        { "node": { "name": "Revix AI", "tagline": "AI code review that learns your repo's own rules", "website": "https://www.producthunt.com/r/102?utm_campaign=producthunt-api&utm_medium=api-v2", "url": "https://www.producthunt.com/products/revix-ai-2", "createdAt": "2026-10-26T14:29:10Z" } },
+        { "node": { "name": "Revix Dashboard", "tagline": "Team analytics for Revix", "website": "https://www.producthunt.com/r/103?utm_campaign=producthunt-api&utm_medium=api-v2", "url": "https://www.producthunt.com/products/revix-dashboard", "createdAt": "2026-10-26T15:00:00Z" } },
+        { "node": { "name": "OpenLoom", "tagline": "Open-source async video for teams", "website": "https://www.producthunt.com/r/104?utm_campaign=producthunt-api&utm_medium=api-v2", "url": "https://www.producthunt.com/products/openloom", "createdAt": "2026-10-25T09:12:00Z" } },
+        { "node": { "name": "Notely Pages", "tagline": "Publish notes as websites", "website": "https://www.producthunt.com/r/105?utm_campaign=producthunt-api&utm_medium=api-v2", "url": "https://www.producthunt.com/products/notely-pages", "createdAt": "2026-10-25T08:00:00Z" } },
         { "node": { "name": "Ghost Product", "tagline": "No website listed", "website": null, "url": "https://www.producthunt.com/products/ghost-product", "createdAt": "2026-10-25T07:00:00Z" } },
-        { "node": { "name": "Lumen Ledger", "tagline": "Bookkeeping that explains itself", "website": "https://lumenledger.com", "url": "https://www.producthunt.com/products/lumen-ledger", "createdAt": "2026-10-24T16:30:00Z" } }
+        { "node": { "name": "Lumen Ledger", "tagline": "Bookkeeping that explains itself", "website": "https://www.producthunt.com/r/106?utm_campaign=producthunt-api&utm_medium=api-v2", "url": "https://www.producthunt.com/products/lumen-ledger", "createdAt": "2026-10-24T16:30:00Z" } }
       ]
     }
   }
