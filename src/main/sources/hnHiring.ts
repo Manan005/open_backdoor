@@ -36,7 +36,7 @@ export const NON_WEBSITE_HOSTS = [
   'youtube.com', 'medium.com', 'news.ycombinator.com', 'ycombinator.com', 'hn.algolia.com'
 ]
 
-function isCompanyHost(host: string): boolean {
+export function isCompanyHost(host: string): boolean {
   return ![...NON_WEBSITE_HOSTS, ...BLOCKED_HOSTS].some((h) => host === h || host.endsWith('.' + h))
 }
 

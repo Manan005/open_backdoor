@@ -1,0 +1,65 @@
+{
+ "storytold": {
+  "login": "storytold",
+  "type": "Organization",
+  "name": "ArtCraft",
+  "description": "Open Source Tools and Models for Makers, Builders, and Creatives",
+  "blog": "https://getartcraft.com",
+  "public_repos": 69,
+  "html_url": "https://github.com/storytold"
+ },
+ "deepseek-ai": {
+  "login": "deepseek-ai",
+  "type": "Organization",
+  "name": "DeepSeek",
+  "description": "",
+  "blog": "https://www.deepseek.com/",
+  "public_repos": 45,
+  "html_url": "https://github.com/deepseek-ai"
+ },
+ "google-research": {
+  "login": "google-research",
+  "type": "Organization",
+  "name": "Google Research",
+  "description": "",
+  "blog": "https://research.google",
+  "public_repos": 369,
+  "html_url": "https://github.com/google-research"
+ },
+ "openai": {
+  "login": "openai",
+  "type": "Organization",
+  "name": "OpenAI",
+  "description": "",
+  "blog": "https://openai.com/",
+  "public_repos": 278,
+  "html_url": "https://github.com/openai"
+ },
+ "tangency-labs": {
+  "login": "tangency-labs",
+  "type": "Organization",
+  "name": "Tangency Labs",
+  "description": "",
+  "blog": null,
+  "public_repos": 10,
+  "html_url": "https://github.com/tangency-labs"
+ },
+ "CopilotKit": {
+  "login": "CopilotKit",
+  "type": "Organization",
+  "name": "CopilotKit",
+  "description": null,
+  "blog": "https://copilotkit.ai",
+  "public_repos": 105,
+  "html_url": "https://github.com/CopilotKit"
+ },
+ "shader-effects-inc": {
+  "login": "shader-effects-inc",
+  "type": "Organization",
+  "name": "shaders",
+  "description": "",
+  "blog": "https://shaders.com",
+  "public_repos": 1,
+  "html_url": "https://github.com/shader-effects-inc"
+ }
+}

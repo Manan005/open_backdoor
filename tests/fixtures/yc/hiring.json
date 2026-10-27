@@ -1,0 +1,720 @@
+[
+ {
+  "id": 31584,
+  "name": "CONUS",
+  "slug": "conus",
+  "website": "https://www.conus-med.com",
+  "all_locations": "Cologne, NRW, Germany",
+  "long_description": "CONUS structures fragmented medical device information for surgeons. We combine manufacturer documentation, hospital protocols and medical research in one place, giving surgeons and MedTech teams reli",
+  "one_liner": "The AI knowledge layer for medical devices",
+  "team_size": 3,
+  "industry": "Healthcare",
+  "subindustry": "Healthcare",
+  "launched_at": 1790675017,
+  "tags": [
+   "Healthcare",
+   "AI"
+  ],
+  "top_company": false,
+  "isHiring": true,
+  "nonprofit": false,
+  "batch": "Fall 2026",
+  "status": "Active",
+  "industries": [
+   "Healthcare"
+  ],
+  "regions": [
+   "Germany",
+   "Europe"
+  ],
+  "stage": "Early",
+  "app_video_public": false,
+  "demo_day_video_public": false,
+  "question_answers": true,
+  "url": "https://www.ycombinator.com/companies/conus",
+  "api": "https://yc-oss.github.io/api/batches/fall-2026/conus.json"
+ },
+ {
+  "id": 33838,
+  "name": "Simantic",
+  "slug": "simantic",
+  "website": "https://simantic.com",
+  "all_locations": "Waterloo, ON, Canada",
+  "long_description": "Simantic is modernizing the embedded firmware industry with hardware simulation developed for the adoption of AI in hardware engineering. Simantic gives both humans and AI the visibility into hardware",
+  "one_liner": "Firmware simulation for AI agents",
+  "team_size": 4,
+  "industry": "B2B",
+  "subindustry": "B2B -> Engineering, Product and Design",
+  "launched_at": 1782327485,
+  "tags": [
+   "Developer Tools",
+   "Hardware",
+   "Semiconductors",
+   "Electronics",
+   "AI"
+  ],
+  "top_company": false,
+  "isHiring": true,
+  "nonprofit": false,
+  "batch": "Fall 2026",
+  "status": "Active",
+  "industries": [
+   "B2B",
+   "Engineering, Product and Design"
+  ],
+  "regions": [
+   "Canada",
+   "America / Canada"
+  ],
+  "stage": "Early",
+  "app_video_public": false,
+  "demo_day_video_public": false,
+  "question_answers": false,
+  "url": "https://www.ycombinator.com/companies/simantic",
+  "api": "https://yc-oss.github.io/api/batches/fall-2026/simantic.json"
+ },
+ {
+  "id": 30728,
+  "name": "OS3",
+  "slug": "os3",
+  "website": "https://os3robotics.com/",
+  "all_locations": "San Francisco, CA, USA",
+  "long_description": "OS3 is building the platform that makes intelligent robots accessible to every business.\r\n\r\nToday, robotics is constrained by two fundamental bottlenecks: hardware is too expensive to deploy at scale,",
+  "one_liner": "Affordable, intelligent humanoid robots built to deploy at scale",
+  "team_size": 2,
+  "industry": "Industrials",
+  "subindustry": "Industrials -> Manufacturing and Robotics",
+  "launched_at": 1753297896,
+  "tags": [
+   "Hardware",
+   "Robotics",
+   "B2B",
+   "AI"
+  ],
+  "top_company": false,
+  "isHiring": true,
+  "nonprofit": false,
+  "batch": "Summer 2026",
+  "status": "Active",
+  "industries": [
+   "Industrials",
+   "Manufacturing and Robotics"
+  ],
+  "regions": [
+   "United States of America",
+   "America / Canada"
+  ],
+  "stage": "Early",
+  "app_video_public": false,
+  "demo_day_video_public": false,
+  "question_answers": false,
+  "url": "https://www.ycombinator.com/companies/os3",
+  "api": "https://yc-oss.github.io/api/batches/summer-2026/os3.json"
+ },
+ {
+  "id": 30914,
+  "name": "Sunflower",
+  "slug": "sunflower",
+  "website": "https://sunflowerclinic.com/",
+  "all_locations": "San Francisco, CA, USA",
+  "long_description": "Sunflower is building an AI-native telemedicine clinic for addiction. There are over 18,750 patients on a waitlist for Therapy or Meds, representing $153M worth of TAM just waiting to be served. \r\n\r\nW",
+  "one_liner": "We are building an AI-native telemedicine clinic for addiction. 🌻",
+  "team_size": 15,
+  "industry": "Healthcare",
+  "subindustry": "Healthcare -> Healthcare Services",
+  "launched_at": 1757558729,
+  "tags": [],
+  "top_company": false,
+  "isHiring": true,
+  "nonprofit": false,
+  "batch": "Summer 2026",
+  "status": "Active",
+  "industries": [
+   "Healthcare",
+   "Healthcare Services"
+  ],
+  "regions": [
+   "United States of America",
+   "America / Canada",
+   "Remote",
+   "Partly Remote"
+  ],
+  "stage": "Early",
+  "app_video_public": false,
+  "demo_day_video_public": false,
+  "question_answers": false,
+  "url": "https://www.ycombinator.com/companies/sunflower",
+  "api": "https://yc-oss.github.io/api/batches/summer-2026/sunflower.json"
+ },
+ {
+  "id": 30408,
+  "name": "Autostep",
+  "slug": "autostep",
+  "website": "https://autostep.ai/",
+  "all_locations": "San Francisco, CA, USA",
+  "long_description": "Autostep maps how work happens across a company for humans and agents, finds repetitive tasks and bottlenecks, and ranks them by cost and impact. Then it fixes them by building agents inside existing ",
+  "one_liner": "The P&L for knowledge work",
+  "team_size": 1,
+  "industry": "B2B",
+  "subindustry": "B2B -> Operations",
+  "launched_at": 1772173697,
+  "tags": [],
+  "top_company": false,
+  "isHiring": true,
+  "nonprofit": false,
+  "batch": "Spring 2026",
+  "status": "Active",
+  "industries": [
+   "B2B",
+   "Operations"
+  ],
+  "regions": [
+   "United States of America",
+   "America / Canada"
+  ],
+  "stage": "Early",
+  "app_video_public": false,
+  "demo_day_video_public": false,
+  "question_answers": false,
+  "url": "https://www.ycombinator.com/companies/autostep",
+  "api": "https://yc-oss.github.io/api/batches/spring-2026/autostep.json"
+ },
+ {
+  "id": 30646,
+  "name": "Humwork",
+  "slug": "humwork",
+  "website": "https://humwork.ai",
+  "all_locations": "San Francisco, CA, USA",
+  "long_description": "Humwork lets AI agents chat with human experts in real-time. When AI agents like Claude Code or OpenClaw hit a wall, Humwork's MCP server connects them to a verified domain expert in under 30 seconds.",
+  "one_liner": "Human experts as API for AI Agents",
+  "team_size": 2,
+  "industry": "B2B",
+  "subindustry": "B2B",
+  "launched_at": 1753843448,
+  "tags": [],
+  "top_company": false,
+  "isHiring": true,
+  "nonprofit": false,
+  "batch": "Spring 2026",
+  "status": "Active",
+  "industries": [
+   "B2B"
+  ],
+  "regions": [
+   "United States of America",
+   "America / Canada"
+  ],
+  "stage": "Early",
+  "app_video_public": false,
+  "demo_day_video_public": false,
+  "question_answers": false,
+  "url": "https://www.ycombinator.com/companies/humwork",
+  "api": "https://yc-oss.github.io/api/batches/spring-2026/humwork.json"
+ },
+ {
+  "id": 30635,
+  "name": "Galactic Resource Utilization Space, Inc. (GRU Space)",
+  "slug": "galactic-resource-utilization-space-inc-gru-space",
+  "website": "https://gru.space",
+  "all_locations": "Los Angeles, CA, USA",
+  "long_description": "GRU Space is building permanent lunar infrastructure to make humanity interplanetary within our lifetime, starting with the first hotel on the Moon. In just 6 weeks, we built the world's first Moon fa",
+  "one_liner": "Moon Hotel -> The Intergalactic Construction Company of Earth",
+  "team_size": 5,
+  "industry": "Industrials",
+  "subindustry": "Industrials -> Aviation and Space",
+  "launched_at": 1767740329,
+  "tags": [],
+  "top_company": false,
+  "isHiring": true,
+  "nonprofit": false,
+  "batch": "Winter 2026",
+  "status": "Active",
+  "industries": [
+   "Industrials",
+   "Aviation and Space"
+  ],
+  "regions": [
+   "United States of America",
+   "America / Canada"
+  ],
+  "stage": "Early",
+  "app_video_public": false,
+  "demo_day_video_public": false,
+  "question_answers": false,
+  "url": "https://www.ycombinator.com/companies/galactic-resource-utilization-space-inc-gru-space",
+  "api": "https://yc-oss.github.io/api/batches/winter-2026/galactic-resource-utilization-space-inc-gru-space.json"
+ },
+ {
+  "id": 30715,
+  "name": "Autumn",
+  "slug": "autumn-ai",
+  "website": "https://autumn.ai",
+  "all_locations": "San Francisco, CA, USA",
+  "long_description": "Autumn builds research agents that answer questions about people and companies at scale. These AI agents are powered by a live index of over 1 billion people, 100 million companies, and state-of-the-a",
+  "one_liner": "The people-intelligence company.",
+  "team_size": 4,
+  "industry": "B2B",
+  "subindustry": "B2B -> Infrastructure",
+  "launched_at": 1770313792,
+  "tags": [],
+  "top_company": false,
+  "isHiring": true,
+  "nonprofit": false,
+  "batch": "Winter 2026",
+  "status": "Active",
+  "industries": [
+   "B2B",
+   "Infrastructure"
+  ],
+  "regions": [
+   "United States of America",
+   "America / Canada"
+  ],
+  "stage": "Early",
+  "app_video_public": false,
+  "demo_day_video_public": false,
+  "question_answers": false,
+  "url": "https://www.ycombinator.com/companies/autumn-ai",
+  "api": "https://yc-oss.github.io/api/batches/winter-2026/autumn-ai.json"
+ },
+ {
+  "id": 26144,
+  "name": "MSPilot",
+  "slug": "mspilot",
+  "website": "https://mspilot.io",
+  "all_locations": "San Francisco, CA, USA; Remote",
+  "long_description": "Make AI your next recurring revenue line.\r\n\r\nMSPilot helps Managed Service Providers deploy, govern, and monetize AI agents across their entire client base. Author an agent once, roll it out to your w",
+  "one_liner": "Turn AI adoption into a recurring revenue line.",
+  "team_size": 3,
+  "industry": "B2B",
+  "subindustry": "B2B -> Engineering, Product and Design",
+  "launched_at": 1680284500,
+  "tags": [
+   "Generative AI",
+   "B2B",
+   "No-code",
+   "Infrastructure",
+   "AI"
+  ],
+  "top_company": false,
+  "isHiring": true,
+  "nonprofit": false,
+  "batch": "Fall 2025",
+  "status": "Active",
+  "industries": [
+   "B2B",
+   "Engineering, Product and Design"
+  ],
+  "regions": [
+   "United States of America",
+   "America / Canada",
+   "Remote",
+   "Fully Remote"
+  ],
+  "stage": "Early",
+  "app_video_public": false,
+  "demo_day_video_public": false,
+  "question_answers": false,
+  "url": "https://www.ycombinator.com/companies/mspilot",
+  "api": "https://yc-oss.github.io/api/batches/fall-2025/mspilot.json"
+ },
+ {
+  "id": 30086,
+  "name": "Autumn",
+  "slug": "autumn",
+  "website": "https://useautumn.com",
+  "all_locations": "London, England, United Kingdom",
+  "long_description": "Autumn is open-source infrastructure over Stripe that allows AI startups to build their pricing plans quickly, and flexibly. We act as your app's DB and manage who's paying for what, track usage and m",
+  "one_liner": "Billing infrastructure for AI",
+  "team_size": 5,
+  "industry": "B2B",
+  "subindustry": "B2B",
+  "launched_at": 1730430835,
+  "tags": [],
+  "top_company": false,
+  "isHiring": true,
+  "nonprofit": false,
+  "batch": "Summer 2025",
+  "status": "Active",
+  "industries": [
+   "B2B"
+  ],
+  "regions": [
+   "United Kingdom",
+   "Europe"
+  ],
+  "stage": "Early",
+  "app_video_public": true,
+  "demo_day_video_public": false,
+  "question_answers": false,
+  "url": "https://www.ycombinator.com/companies/autumn",
+  "api": "https://yc-oss.github.io/api/batches/summer-2025/autumn.json"
+ },
+ {
+  "id": 29656,
+  "name": "Leeroo",
+  "slug": "leeroo",
+  "website": "https://www.leeroo.com/",
+  "all_locations": "London, England, United Kingdom",
+  "long_description": "An AI that continuously learns your organization’s knowledge and expert playbooks, uses experimentation, and with human approval ships data & AI programs and their operational UIs on your existing sta",
+  "one_liner": "Organizational Superintelligence",
+  "team_size": 3,
+  "industry": "B2B",
+  "subindustry": "B2B",
+  "launched_at": 1732293207,
+  "tags": [],
+  "top_company": false,
+  "isHiring": true,
+  "nonprofit": false,
+  "batch": "Spring 2025",
+  "status": "Active",
+  "industries": [
+   "B2B"
+  ],
+  "regions": [
+   "United Kingdom",
+   "Europe"
+  ],
+  "stage": "Early",
+  "app_video_public": false,
+  "demo_day_video_public": false,
+  "question_answers": false,
+  "url": "https://www.ycombinator.com/companies/leeroo",
+  "api": "https://yc-oss.github.io/api/batches/spring-2025/leeroo.json"
+ },
+ {
+  "id": 29790,
+  "name": "YouShift",
+  "slug": "youshift",
+  "website": "https://www.you-shift.com/",
+  "all_locations": "New York City, NY, USA",
+  "long_description": "YouShift uses AI to automate hospital shift scheduling, replacing legacy software and eliminating the need for full-time schedulers. And scheduling is just the beginning — we're building the future of",
+  "one_liner": "The OS for hospital workforce management",
+  "team_size": 10,
+  "industry": "B2B",
+  "subindustry": "B2B -> Human Resources",
+  "launched_at": 1738883676,
+  "tags": [
+   "Health Tech",
+   "Healthcare",
+   "HR Tech",
+   "Operations",
+   "AI"
+  ],
+  "top_company": false,
+  "isHiring": true,
+  "nonprofit": false,
+  "batch": "Winter 2025",
+  "status": "Active",
+  "industries": [
+   "B2B",
+   "Human Resources"
+  ],
+  "regions": [
+   "United States of America",
+   "America / Canada",
+   "Remote",
+   "Partly Remote"
+  ],
+  "stage": "Early",
+  "app_video_public": false,
+  "demo_day_video_public": false,
+  "question_answers": false,
+  "url": "https://www.ycombinator.com/companies/youshift",
+  "api": "https://yc-oss.github.io/api/batches/winter-2025/youshift.json"
+ },
+ {
+  "id": 29577,
+  "name": "Variant",
+  "slug": "variant",
+  "website": "https://variant.com",
+  "all_locations": "San Francisco, CA, USA",
+  "long_description": "Creative intelligence",
+  "one_liner": "Creative intelligence",
+  "team_size": 5,
+  "industry": "B2B",
+  "subindustry": "B2B -> Engineering, Product and Design",
+  "launched_at": 1732310413,
+  "tags": [
+   "Developer Tools",
+   "Design Tools",
+   "AI"
+  ],
+  "top_company": false,
+  "isHiring": true,
+  "nonprofit": false,
+  "batch": "Fall 2024",
+  "status": "Active",
+  "industries": [
+   "B2B",
+   "Engineering, Product and Design"
+  ],
+  "regions": [
+   "United States of America",
+   "America / Canada"
+  ],
+  "stage": "Early",
+  "app_video_public": false,
+  "demo_day_video_public": false,
+  "question_answers": false,
+  "url": "https://www.ycombinator.com/companies/variant",
+  "api": "https://yc-oss.github.io/api/batches/fall-2024/variant.json"
+ },
+ {
+  "id": 30019,
+  "name": "Avora",
+  "slug": "avora",
+  "website": "https://www.getavora.ai",
+  "all_locations": "San Francisco, CA, USA",
+  "long_description": "Avora helps dental groups (DSOs) boost case acceptance and institutionalize clinical excellence. We deploy agents that listen to appointments, identify coachable moments, and chart notes to save provi",
+  "one_liner": "Agents for dental operations",
+  "team_size": 4,
+  "industry": "Healthcare",
+  "subindustry": "Healthcare",
+  "launched_at": 1732046929,
+  "tags": [],
+  "top_company": false,
+  "isHiring": true,
+  "nonprofit": false,
+  "batch": "Fall 2024",
+  "status": "Active",
+  "industries": [
+   "Healthcare"
+  ],
+  "regions": [
+   "United States of America",
+   "America / Canada"
+  ],
+  "stage": "Early",
+  "app_video_public": false,
+  "demo_day_video_public": false,
+  "question_answers": false,
+  "url": "https://www.ycombinator.com/companies/avora",
+  "api": "https://yc-oss.github.io/api/batches/fall-2024/avora.json"
+ },
+ {
+  "id": 29251,
+  "name": "Poka Labs",
+  "slug": "poka-labs",
+  "website": "https://www.pokalabs.com/",
+  "all_locations": "San Francisco, CA, USA",
+  "long_description": "Poka Labs builds an AI platform to help sales reps at chemical manufacturers respond to requests from customers and win more business.  Our agents understand each companies product catalog, customer p",
+  "one_liner": "Helping industrial manufacturers win deals fast, at the right price.",
+  "team_size": 5,
+  "industry": "B2B",
+  "subindustry": "B2B -> Supply Chain and Logistics",
+  "launched_at": 1721318249,
+  "tags": [
+   "SaaS",
+   "Supply Chain",
+   "AI",
+   "Industrial"
+  ],
+  "top_company": false,
+  "isHiring": true,
+  "nonprofit": false,
+  "batch": "Summer 2024",
+  "status": "Active",
+  "industries": [
+   "B2B",
+   "Supply Chain and Logistics"
+  ],
+  "regions": [
+   "United States of America",
+   "America / Canada"
+  ],
+  "stage": "Early",
+  "app_video_public": false,
+  "demo_day_video_public": false,
+  "question_answers": false,
+  "url": "https://www.ycombinator.com/companies/poka-labs",
+  "api": "https://yc-oss.github.io/api/batches/summer-2024/poka-labs.json"
+ },
+ {
+  "id": 64,
+  "name": "Y Combinator",
+  "slug": "y-combinator",
+  "website": "https://www.ycombinator.com",
+  "all_locations": "",
+  "long_description": "Make something people want.",
+  "one_liner": "Make something people want.",
+  "team_size": 100,
+  "industry": "Fintech",
+  "subindustry": "Fintech",
+  "launched_at": 1322046644,
+  "tags": [],
+  "top_company": false,
+  "isHiring": true,
+  "nonprofit": false,
+  "batch": "Unspecified",
+  "status": "Active",
+  "industries": [
+   "Fintech"
+  ],
+  "regions": [
+   "Remote",
+   "Partly Remote"
+  ],
+  "stage": "Early",
+  "app_video_public": false,
+  "demo_day_video_public": false,
+  "question_answers": false,
+  "url": "https://www.ycombinator.com/companies/y-combinator",
+  "api": "https://yc-oss.github.io/api/batches/unspecified/y-combinator.json"
+ },
+ {
+  "id": 31047,
+  "name": "Waddle Labs",
+  "slug": "waddle-labs",
+  "website": "https://www.waddlelabs.ai/",
+  "all_locations": "San Francisco, CA, USA",
+  "long_description": "",
+  "one_liner": "LLMs that control robots",
+  "team_size": 2,
+  "industry": "Industrials",
+  "subindustry": "Industrials -> Manufacturing and Robotics",
+  "launched_at": 1784890498,
+  "tags": [
+   "Developer Tools",
+   "Generative AI",
+   "Robotics",
+   "Automation"
+  ],
+  "top_company": false,
+  "isHiring": true,
+  "nonprofit": false,
+  "batch": "Summer 2026",
+  "status": "Inactive",
+  "industries": [
+   "Industrials",
+   "Manufacturing and Robotics"
+  ],
+  "regions": [
+   "United States of America",
+   "America / Canada"
+  ],
+  "stage": "Early",
+  "app_video_public": false,
+  "demo_day_video_public": false,
+  "question_answers": false,
+  "url": "https://www.ycombinator.com/companies/waddle-labs",
+  "api": "https://yc-oss.github.io/api/batches/summer-2026/waddle-labs.json"
+ },
+ {
+  "id": 35025,
+  "name": "Inflection Space Systems",
+  "slug": "inflection-space-systems",
+  "website": "https://inflection-space.com/",
+  "all_locations": "Los Angeles, CA, USA",
+  "long_description": "Inflection is building the industrial capacity to manufacture tens of thousands of spacecraft per year for next generation commercial and government space applications. Imagine a factory that looks li",
+  "one_liner": "Hyperscaling space manufacturing",
+  "team_size": null,
+  "industry": "Industrials",
+  "subindustry": "Industrials -> Aviation and Space",
+  "launched_at": 1789683191,
+  "tags": [
+   "Satellites",
+   "Manufacturing",
+   "Defense"
+  ],
+  "top_company": false,
+  "isHiring": true,
+  "nonprofit": false,
+  "batch": "Fall 2026",
+  "status": "Active",
+  "industries": [
+   "Industrials",
+   "Aviation and Space"
+  ],
+  "regions": [
+   "United States of America",
+   "America / Canada",
+   "Remote",
+   "Partly Remote"
+  ],
+  "stage": "Early",
+  "app_video_public": false,
+  "demo_day_video_public": false,
+  "question_answers": false,
+  "url": "https://www.ycombinator.com/companies/inflection-space-systems",
+  "api": "https://yc-oss.github.io/api/batches/fall-2026/inflection-space-systems.json"
+ },
+ {
+  "id": 35127,
+  "name": "Rhem Labs",
+  "slug": "rhem-labs",
+  "website": "https://rhem.ai",
+  "all_locations": "San Francisco, CA, USA",
+  "long_description": "Rhem Labs builds smart home care devices that help older adults and people with complex care needs live independently. ",
+  "one_liner": "Home care technology for aging parents and their families",
+  "team_size": 2,
+  "industry": "Healthcare",
+  "subindustry": "Healthcare -> Consumer Health and Wellness",
+  "launched_at": 1790296181,
+  "tags": [
+   "Robotics",
+   "Health & Wellness",
+   "Consumer Products"
+  ],
+  "top_company": false,
+  "isHiring": true,
+  "nonprofit": false,
+  "batch": "Fall 2026",
+  "status": "Active",
+  "industries": [
+   "Healthcare",
+   "Consumer Health and Wellness"
+  ],
+  "regions": [
+   "United States of America",
+   "America / Canada",
+   "Remote",
+   "Partly Remote"
+  ],
+  "stage": "Early",
+  "app_video_public": false,
+  "demo_day_video_public": false,
+  "question_answers": false,
+  "url": "https://www.ycombinator.com/companies/rhem-labs",
+  "api": "https://yc-oss.github.io/api/batches/fall-2026/rhem-labs.json"
+ },
+ {
+  "id": 36015,
+  "name": "Ignition Benefits",
+  "slug": "ignition-benefits",
+  "website": "https://www.ignitionbenefits.com/",
+  "all_locations": "Los Angeles, CA, USA",
+  "long_description": "Ignition is an AI-native employee benefits brokerage for companies with under 200 employees. Health insurance is one of the largest line items these companies carry, and employers absorb 15 to 40% rat",
+  "one_liner": "The AI-Native Benefits Brokerage",
+  "team_size": 12,
+  "industry": "Fintech",
+  "subindustry": "Fintech -> Insurance",
+  "launched_at": 1789432184,
+  "tags": [
+   "Health Insurance",
+   "Insurance",
+   "AI"
+  ],
+  "top_company": false,
+  "isHiring": true,
+  "nonprofit": false,
+  "batch": "Fall 2026",
+  "status": "Active",
+  "industries": [
+   "Fintech",
+   "Insurance"
+  ],
+  "regions": [
+   "United States of America",
+   "America / Canada",
+   "Remote",
+   "Partly Remote"
+  ],
+  "stage": "Early",
+  "app_video_public": false,
+  "demo_day_video_public": false,
+  "question_answers": false,
+  "url": "https://www.ycombinator.com/companies/ignition-benefits",
+  "api": "https://yc-oss.github.io/api/batches/fall-2026/ignition-benefits.json"
+ }
+]
