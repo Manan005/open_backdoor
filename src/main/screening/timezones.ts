@@ -37,3 +37,39 @@ export function countryFromText(s: string): string | null {
   }
   return best?.code ?? null
 }
+
+const COUNTRY_ZONES: Record<string, string> = {
+  US: 'America/New_York', IN: 'Asia/Kolkata', GB: 'Europe/London', CA: 'America/Toronto', DE: 'Europe/Berlin',
+  FR: 'Europe/Paris', SG: 'Asia/Singapore', AE: 'Asia/Dubai', AU: 'Australia/Sydney', NL: 'Europe/Amsterdam',
+  IL: 'Asia/Jerusalem', BR: 'America/Sao_Paulo'
+}
+
+// Cities whose zone differs from their country's default, plus the common hubs.
+const CITY_ZONES: Record<string, string> = {
+  'san francisco': 'America/Los_Angeles', 'los angeles': 'America/Los_Angeles', seattle: 'America/Los_Angeles',
+  'palo alto': 'America/Los_Angeles', 'mountain view': 'America/Los_Angeles', 'san jose': 'America/Los_Angeles',
+  'san diego': 'America/Los_Angeles', vancouver: 'America/Vancouver', denver: 'America/Denver',
+  calgary: 'America/Edmonton', austin: 'America/Chicago', chicago: 'America/Chicago',
+  'new york': 'America/New_York', 'new york city': 'America/New_York', boston: 'America/New_York',
+  miami: 'America/New_York', atlanta: 'America/New_York', toronto: 'America/Toronto', montreal: 'America/Toronto',
+  montréal: 'America/Toronto', ottawa: 'America/Toronto',
+  bengaluru: 'Asia/Kolkata', bangalore: 'Asia/Kolkata', mumbai: 'Asia/Kolkata', delhi: 'Asia/Kolkata',
+  'new delhi': 'Asia/Kolkata', hyderabad: 'Asia/Kolkata', chennai: 'Asia/Kolkata', pune: 'Asia/Kolkata',
+  gurgaon: 'Asia/Kolkata', gurugram: 'Asia/Kolkata', noida: 'Asia/Kolkata', kolkata: 'Asia/Kolkata',
+  ahmedabad: 'Asia/Kolkata', london: 'Europe/London', berlin: 'Europe/Berlin', paris: 'Europe/Paris',
+  amsterdam: 'Europe/Amsterdam', singapore: 'Asia/Singapore', dubai: 'Asia/Dubai', 'abu dhabi': 'Asia/Dubai',
+  sydney: 'Australia/Sydney', melbourne: 'Australia/Melbourne', brisbane: 'Australia/Brisbane',
+  perth: 'Australia/Perth', 'tel aviv': 'Asia/Jerusalem', 'tel-aviv': 'Asia/Jerusalem',
+  'são paulo': 'America/Sao_Paulo', 'sao paulo': 'America/Sao_Paulo'
+}
+
+// IANA zone for a startup's location: a known city wins, else the country's default, else null.
+export function timezoneFor(country: string | null, city: string | null): string | null {
+  if (city) {
+    const whole = city.trim().toLowerCase()
+    const first = whole.split(',')[0].trim()
+    const zone = CITY_ZONES[whole] ?? CITY_ZONES[first]
+    if (zone) return zone
+  }
+  return country ? (COUNTRY_ZONES[country.toUpperCase()] ?? null) : null
+}
