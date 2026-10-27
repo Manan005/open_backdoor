@@ -1,0 +1,53 @@
+[
+ {
+  "categories": {
+   "commitment": "Full-time",
+   "location": "Singapore, Singapore",
+   "team": "Administrative",
+   "allLocations": [
+    "Singapore, Singapore"
+   ]
+  },
+  "createdAt": 1786469891368,
+  "id": "6ed76ce8-4156-4b60-b120-403538bd66cd",
+  "text": "Administrative Business Partner",
+  "country": "SG",
+  "workplaceType": "hybrid",
+  "hostedUrl": "https://jobs.lever.co/palantir/6ed76ce8-4156-4b60-b120-403538bd66cd",
+  "applyUrl": "https://jobs.lever.co/palantir/6ed76ce8-4156-4b60-b120-403538bd66cd/apply"
+ },
+ {
+  "categories": {
+   "commitment": "Full-time",
+   "location": "London, United Kingdom",
+   "team": "Administrative",
+   "allLocations": [
+    "London, United Kingdom"
+   ]
+  },
+  "createdAt": 1711403416463,
+  "id": "ac978161-6f46-4f6b-ad9e-a258e642751c",
+  "text": "Administrative Business Partner",
+  "country": "GB",
+  "workplaceType": "hybrid",
+  "hostedUrl": "https://jobs.lever.co/palantir/ac978161-6f46-4f6b-ad9e-a258e642751c",
+  "applyUrl": "https://jobs.lever.co/palantir/ac978161-6f46-4f6b-ad9e-a258e642751c/apply"
+ },
+ {
+  "categories": {
+   "commitment": "Full-time",
+   "location": "Washington, D.C.",
+   "team": "Administrative",
+   "allLocations": [
+    "Washington, D.C."
+   ]
+  },
+  "createdAt": 1781771660468,
+  "id": "a237973c-cb29-41fe-9c80-416e6f42e087",
+  "text": "Administrative Business Partner - ShipOS",
+  "country": "US",
+  "workplaceType": "hybrid",
+  "hostedUrl": "https://jobs.lever.co/palantir/a237973c-cb29-41fe-9c80-416e6f42e087",
+  "applyUrl": "https://jobs.lever.co/palantir/a237973c-cb29-41fe-9c80-416e6f42e087/apply"
+ }
+]
