@@ -49,4 +49,37 @@ describe('createFetcher', () => {
     const res = await f('https://example.com/a')
     expect(res).toEqual({ status: 200, text: 'done', url: 'https://example.com/b' })
   })
+
+  it('drops credential headers on a cross-origin redirect and keeps them same-origin', async () => {
+    const base = vi
+      .fn()
+      .mockResolvedValueOnce(new Response(null, { status: 302, headers: { location: '/same' } }))
+      .mockResolvedValueOnce(new Response(null, { status: 302, headers: { location: 'https://other.org/x' } }))
+      .mockResolvedValueOnce(new Response('ok', { status: 200 }))
+    const f = createFetcher(base as unknown as typeof fetch)
+    await f('https://api.example.com/a', {
+      headers: { Authorization: 'Bearer t', 'X-Subscription-Token': 's', 'x-api-key': 'k', Cookie: 'c=1', Accept: 'a/b' }
+    })
+    const hdr = (i: number): Record<string, string> => base.mock.calls[i][1].headers
+    expect(Object.keys(hdr(1)).map((k) => k.toLowerCase())).toContain('authorization')
+    const cross = Object.keys(hdr(2)).map((k) => k.toLowerCase())
+    expect(cross).not.toContain('authorization')
+    expect(cross).not.toContain('x-subscription-token')
+    expect(cross).not.toContain('x-api-key')
+    expect(cross).not.toContain('cookie')
+    expect(cross).toContain('accept')
+    expect(cross).toContain('user-agent')
+  })
+
+  it('switches a POST to GET without a body on a 302', async () => {
+    const base = vi
+      .fn()
+      .mockResolvedValueOnce(new Response(null, { status: 302, headers: { location: '/done' } }))
+      .mockResolvedValueOnce(new Response('ok', { status: 200 }))
+    const f = createFetcher(base as unknown as typeof fetch)
+    await f('https://example.com/post', { method: 'POST', body: '{"a":1}' })
+    expect(base.mock.calls[0][1]).toMatchObject({ method: 'POST', body: '{"a":1}' })
+    expect(base.mock.calls[1][1].method).toBe('GET')
+    expect(base.mock.calls[1][1].body).toBeUndefined()
+  })
 })

@@ -1,4 +1,5 @@
 import type { Candidate } from '../../shared/types'
+import { BLOCKED_HOSTS } from '../net/http'
 import { extractEmails } from './normalize'
 import type { Source } from './types'
 
@@ -23,7 +24,33 @@ function toPlain(html: string): string {
   return decodeEntities(withLinks.replace(/<p>/gi, '\n').replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, ''))
 }
 
-const URL_RE = /https?:\/\/[^\s<>"')\]]+/i
+const URL_RE = /https?:\/\/[^\s<>"')\]]+/gi
+
+// Hosts that are never a company's own site: job boards / ATS, code hosting, social, HN itself.
+// Matched on a dot boundary (host equals or ends with ".<entry>"). Blocked hosts are skipped too.
+export const NON_WEBSITE_HOSTS = [
+  'lever.co', 'greenhouse.io', 'ashbyhq.com', 'workable.com', 'workday.com', 'myworkdayjobs.com',
+  'smartrecruiters.com', 'recruitee.com', 'breezy.hr', 'jobvite.com', 'bamboohr.com', 'icims.com',
+  'rippling.com', 'notion.site', 'notion.so', 'docs.google.com', 'forms.gle', 'typeform.com',
+  'github.com', 'gitlab.com', 'twitter.com', 'x.com', 'facebook.com', 'instagram.com',
+  'youtube.com', 'medium.com', 'news.ycombinator.com', 'ycombinator.com', 'hn.algolia.com'
+]
+
+function isCompanyHost(host: string): boolean {
+  return ![...NON_WEBSITE_HOSTS, ...BLOCKED_HOSTS].some((h) => host === h || host.endsWith('.' + h))
+}
+
+function pickWebsite(plain: string): string | null {
+  for (const m of plain.matchAll(URL_RE)) {
+    const url = m[0].replace(/[.,;:]+$/, '')
+    try {
+      if (isCompanyHost(new URL(url).hostname.toLowerCase())) return url
+    } catch {
+      // malformed URL, try the next one
+    }
+  }
+  return null
+}
 
 async function getJson<T>(ctx: Parameters<Source['fetchCandidates']>[0], url: string): Promise<T> {
   const res = await ctx.fetch(url)
@@ -42,7 +69,7 @@ function parseComment(c: Comment): Candidate | null {
   if (!name) return null
   const url = `https://news.ycombinator.com/item?id=${c.id}`
   const roles = segments.slice(1).find((s) => s && !/remote/i.test(s))
-  const website = plain.match(URL_RE)?.[0].replace(/[.,;:]+$/, '') ?? null
+  const website = pickWebsite(plain)
   const rest = (nl < 0 ? '' : plain.slice(nl + 1)).replace(/\s+/g, ' ').trim()
   return {
     name,

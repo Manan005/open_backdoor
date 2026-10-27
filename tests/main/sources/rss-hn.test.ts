@@ -3,7 +3,7 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { domainKey, deobfuscateEmails, extractEmails } from '../../../src/main/sources/normalize'
 import { FUNDING_FEEDS, rssFundingSource } from '../../../src/main/sources/rssFunding'
-import { hnHiringSource } from '../../../src/main/sources/hnHiring'
+import { hnHiringSource, NON_WEBSITE_HOSTS } from '../../../src/main/sources/hnHiring'
 import type { Fetcher, SourceContext } from '../../../src/main/sources/types'
 import { createFakeLlm } from '../llm/fakeLlm'
 import type { Profile, Settings } from '../../../src/shared/types'
@@ -55,6 +55,16 @@ describe('normalize', () => {
   it('does not mangle ordinary prose', () => {
     const prose = 'We meet at noon dot. See you at the office. Look at this.'
     expect(deobfuscateEmails(prose)).toBe(prose)
+  })
+
+  it('never invents an address from "at <domain>" prose', () => {
+    for (const s of ['contact us at acme.com', 'apply at acme.io', 'email me at foo.com']) {
+      expect(deobfuscateEmails(s)).toBe(s)
+      expect(extractEmails(s)).toEqual([])
+    }
+    expect(extractEmails('jobs at acme dot io')).toEqual(['jobs@acme.io'])
+    expect(extractEmails('jobs [at] acme.io')).toEqual(['jobs@acme.io'])
+    expect(extractEmails('jobs(at)acme.io')).toEqual(['jobs@acme.io'])
   })
 
   it('extractEmails lowercases and dedupes after deobfuscation', () => {
@@ -171,6 +181,23 @@ describe('hnHiringSource', () => {
     expect(snout.website).toBe('https://snout.com/')
     expect(snout.remote).toBe(true)
     expect(out.find((o) => o.name.startsWith('Shepherd'))!.remote).toBeNull()
+  })
+
+  it('skips job-board, code-host and blocked URLs when choosing the website', async () => {
+    const mk = (id: number, text: string): object => ({ id, text, created_at: '2026-10-02T00:00:00Z', children: [] })
+    const item = {
+      children: [
+        mk(10, 'Foo | Eng | Remote<p>Apply https:&#x2F;&#x2F;jobs.lever.co&#x2F;foo and https:&#x2F;&#x2F;foo.dev&#x2F;about'),
+        mk(11, 'Bar | Eng<p>https:&#x2F;&#x2F;boards.greenhouse.io&#x2F;bar https:&#x2F;&#x2F;www.linkedin.com&#x2F;company&#x2F;bar https:&#x2F;&#x2F;github.com&#x2F;bar'),
+        mk(12, 'Baz | Eng<p>https:&#x2F;&#x2F;notlinkedin.com&#x2F;')
+      ]
+    }
+    const c = ctx(
+      fakeFetch({ [search]: fx('hn/search.json'), 'https://hn.algolia.com/api/v1/items/49922569': JSON.stringify(item) })
+    )
+    const out = await hnHiringSource.fetchCandidates(c)
+    expect(out.map((o) => o.website)).toEqual(['https://foo.dev/about', null, 'https://notlinkedin.com/'])
+    expect(NON_WEBSITE_HOSTS).toContain('jobs.ashbyhq.com'.split('.').slice(1).join('.'))
   })
 
   it('skips when no hiring thread is found', async () => {
