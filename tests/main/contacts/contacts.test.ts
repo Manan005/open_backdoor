@@ -202,6 +202,41 @@ describe('findContacts safeguards', () => {
   })
 })
 
+describe('findContacts name and role grounding', () => {
+  const html =
+    '<p>Alessandro Rossi, CEO alessandro@acme.com</p>' +
+    '<p>filler </p>'.repeat(60) +
+    '<p>Jessica Lee, Doctor of Physics jessica@acme.com</p>'
+  const pages = [{ url: 'https://acme.com/team', html }]
+
+  it('keeps full names whose first name appears in the own window', async () => {
+    const llm = createFakeLlm([
+      reply([
+        { email: 'alessandro@acme.com', name: 'Alessandro Rossi', role: 'CEO' },
+        { email: 'jessica@acme.com', name: 'Jessica Lee', role: null }
+      ])
+    ])
+    const out = await findContacts(llm, { companyDomain: 'acme.com', sourceEmails: [], pages })
+    expect(out.find((c) => c.email === 'alessandro@acme.com')).toMatchObject({
+      name: 'Alessandro Rossi',
+      role: 'CEO',
+      kind: 'founder'
+    })
+    expect(out.find((c) => c.email === 'jessica@acme.com')).toMatchObject({ name: 'Jessica Lee' })
+  })
+
+  it('does not match a role inside another word', async () => {
+    const llm = createFakeLlm([
+      reply([{ email: 'jessica@acme.com', name: 'Jessica Lee', role: 'CTO' }])
+    ])
+    const out = await findContacts(llm, { companyDomain: 'acme.com', sourceEmails: [], pages })
+    expect(out.find((c) => c.email === 'jessica@acme.com')).toMatchObject({
+      role: null,
+      kind: 'person'
+    })
+  })
+})
+
 describe('fetchCompanyPages', () => {
   it('fetches same-host pages in path order, skipping errors, blocked hosts, off-host redirects and duplicates', async () => {
     const fetch: Fetcher = async (url) => {

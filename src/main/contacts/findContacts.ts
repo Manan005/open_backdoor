@@ -235,9 +235,9 @@ export async function findContacts(
         if (!own) continue
         // a window on a dense team page can include a neighbour: keep only what this person's own text supports
         const ctx = own.context.toLowerCase()
-        const first = p.name?.trim().split(/s+/)[0]?.toLowerCase()
+        const first = p.name?.trim().split(/\s+/)[0]?.toLowerCase()
         const name = first && first.length >= 2 && hasWord(ctx, first) ? p.name!.trim() : null
-        const role = p.role && ctx.includes(p.role.trim().toLowerCase()) ? p.role.trim() : null
+        const role = p.role && hasWord(ctx, p.role.trim().toLowerCase()) ? p.role.trim() : null
         links.set(email, { name, role })
       }
     } catch (e) {
