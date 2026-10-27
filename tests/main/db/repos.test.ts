@@ -131,6 +131,21 @@ describe('CompanyRepo', () => {
     expect(b.stage).toBe('seed')
     expect(b.website).toBe('https://acme.io')
   })
+
+  it("a known stage replaces 'unknown' but not the other way round", () => {
+    const repo = new CompanyRepo(db)
+    repo.upsert(candidate({ stage: 'unknown' }), 'acme.io')
+    expect(repo.upsert(candidate({ stage: 'seed' }), 'acme.io').stage).toBe('seed')
+    expect(repo.upsert(candidate({ stage: 'unknown' }), 'acme.io').stage).toBe('seed')
+    expect(repo.upsert(candidate({ stage: 'unknown' }), 'b.io').stage).toBe('unknown')
+  })
+
+  it('upsert unions emails case-insensitively keeping the first spelling', () => {
+    const repo = new CompanyRepo(db)
+    repo.upsert(candidate({ emails: [{ email: 'A@acme.io', url: 'p1' }] }), 'acme.io')
+    const b = repo.upsert(candidate({ emails: [{ email: 'a@acme.io', url: 'p2' }] }), 'acme.io')
+    expect(b.emails).toEqual([{ email: 'A@acme.io', url: 'p1' }])
+  })
 })
 
 describe('LeadRepo', () => {

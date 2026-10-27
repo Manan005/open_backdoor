@@ -140,8 +140,11 @@ export class CompanyRepo {
       country: existing.country ?? c.country,
       city: existing.city ?? c.city,
       remote: existing.remote ?? c.remote,
-      stage: existing.stage ?? c.stage,
-      emails: mergeBy(existing.emails, c.emails, (e) => e.email)
+      stage:
+        existing.stage && existing.stage !== 'unknown'
+          ? existing.stage
+          : (c.stage ?? existing.stage),
+      emails: mergeBy(existing.emails, c.emails, (e) => e.email.toLowerCase())
     }
     this.db
       .prepare(
