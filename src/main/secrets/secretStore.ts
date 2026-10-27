@@ -22,6 +22,13 @@ export class SecretsUnavailableError extends Error {
   }
 }
 
+export class SecretsCorruptError extends Error {
+  constructor() {
+    super('The saved secrets file is unreadable. Reset saved keys before entering new ones.')
+    this.name = 'SecretsCorruptError'
+  }
+}
+
 export function createMemorySecretStore(): SecretStore {
   const m = new Map<SecretKey, string>()
   return {
@@ -36,14 +43,17 @@ export function createSafeStorageSecretStore(filePath: string, safe: SafeStorage
   const requireEncryption = (): void => {
     if (!safe.isEncryptionAvailable()) throw new SecretsUnavailableError()
   }
-  const load = (): Partial<Record<SecretKey, string>> => {
+  // Returns null when the file exists but cannot be parsed, so set() never overwrites it.
+  const loadOrNull = (): Partial<Record<SecretKey, string>> | null => {
     if (!existsSync(filePath)) return {}
     try {
-      return JSON.parse(readFileSync(filePath, 'utf8')) as Partial<Record<SecretKey, string>>
+      const v: unknown = JSON.parse(readFileSync(filePath, 'utf8'))
+      return v !== null && typeof v === 'object' && !Array.isArray(v) ? (v as Partial<Record<SecretKey, string>>) : null
     } catch {
-      return {}
+      return null
     }
   }
+  const load = (): Partial<Record<SecretKey, string>> => loadOrNull() ?? {}
   const save = (data: Partial<Record<SecretKey, string>>): void => {
     const tmp = `${filePath}.tmp`
     writeFileSync(tmp, JSON.stringify(data))
@@ -62,7 +72,8 @@ export function createSafeStorageSecretStore(filePath: string, safe: SafeStorage
     },
     set(k, v) {
       requireEncryption()
-      const data = load()
+      const data = loadOrNull()
+      if (data === null) throw new SecretsCorruptError()
       data[k] = safe.encryptString(v).toString('base64')
       save(data)
     },

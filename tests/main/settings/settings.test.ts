@@ -12,6 +12,7 @@ import {
   validateAiSettings
 } from '../../../src/main/settings/settings'
 import {
+  SecretsCorruptError,
   SecretsUnavailableError,
   createMemorySecretStore,
   createSafeStorageSecretStore
@@ -99,6 +100,22 @@ describe('secret stores', () => {
       const s = createSafeStorageSecretStore(join(dir, 's.json'), fakeSafe(false))
       expect(() => s.set('ai.apiKey', 'x')).toThrow(SecretsUnavailableError)
       expect(existsSync(join(dir, 's.json'))).toBe(false)
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+  it('corrupt secrets file is not overwritten by set, and clearAll resets it', () => {
+    const dir = tmp()
+    try {
+      const file = join(dir, 's.json')
+      writeFileSync(file, '{not json')
+      const s = createSafeStorageSecretStore(file, fakeSafe())
+      expect(s.has('ai.apiKey')).toBe(false)
+      expect(() => s.set('ai.apiKey', 'x')).toThrow(SecretsCorruptError)
+      expect(readFileSync(file, 'utf8')).toBe('{not json')
+      s.clearAll()
+      s.set('ai.apiKey', 'x')
+      expect(s.get('ai.apiKey')).toBe('x')
     } finally {
       rmSync(dir, { recursive: true, force: true })
     }
