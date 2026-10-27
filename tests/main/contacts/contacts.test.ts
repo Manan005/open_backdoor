@@ -138,6 +138,70 @@ describe('findContacts', () => {
   })
 })
 
+describe('findContacts safeguards', () => {
+  const one = (html: string, domain = 'acme.com'): { url: string; html: string }[] => [
+    { url: `https://${domain}/team`, html }
+  ]
+
+  it('only real founder titles become founder', async () => {
+    const html =
+      '<p>Dee Rector, Director of Engineering dee@acme.com</p><p>Cy Oh, Co-founder & CTO cy@acme.com</p><p>Ed Ceo, CEO ed@acme.com</p>'
+    const llm = createFakeLlm([
+      reply([
+        { email: 'dee@acme.com', name: 'Dee', role: 'Director of Engineering' },
+        { email: 'cy@acme.com', name: 'Cy', role: 'Co-founder & CTO' },
+        { email: 'ed@acme.com', name: 'Ed', role: 'CEO' }
+      ])
+    ])
+    const out = await findContacts(llm, {
+      companyDomain: 'acme.com',
+      sourceEmails: [],
+      pages: one(html)
+    })
+    const kind = (e: string): string | undefined => out.find((c) => c.email === e)?.kind
+    expect(kind('dee@acme.com')).toBe('person')
+    expect(kind('cy@acme.com')).toBe('founder')
+    expect(kind('ed@acme.com')).toBe('founder')
+  })
+
+  it('does not let software@ vouch for are@', async () => {
+    const out = await findContacts(createFakeLlm([reply([])]), {
+      companyDomain: 'acme.com',
+      sourceEmails: [],
+      pages: one('<p>Mail software@acme.com. Today we are at acme dot com</p>')
+    })
+    expect(out.map((c) => c.email)).toEqual(['software@acme.com'])
+  })
+
+  it("drops a neighbour's name and an unsupported role returned by the LLM", async () => {
+    const html =
+      '<p>Jane Doe Co-founder jane@acme.com</p>' +
+      '<p>filler </p>'.repeat(60) +
+      '<p>Sam Roe CTO sam@acme.com</p>'
+    const llm = createFakeLlm([
+      reply([
+        { email: 'jane@acme.com', name: 'Sam Roe', role: 'CTO' },
+        { email: 'sam@acme.com', name: 'Sam Roe', role: 'CTO' }
+      ])
+    ])
+    const out = await findContacts(llm, {
+      companyDomain: 'acme.com',
+      sourceEmails: [],
+      pages: one(html)
+    })
+    expect(out.find((c) => c.email === 'jane@acme.com')).toMatchObject({
+      name: null,
+      role: null,
+      kind: 'person'
+    })
+    expect(out.find((c) => c.email === 'sam@acme.com')).toMatchObject({
+      name: 'Sam Roe',
+      role: 'CTO',
+      kind: 'founder'
+    })
+  })
+})
+
 describe('fetchCompanyPages', () => {
   it('fetches same-host pages in path order, skipping errors, blocked hosts, off-host redirects and duplicates', async () => {
     const fetch: Fetcher = async (url) => {

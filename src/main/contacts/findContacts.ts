@@ -140,6 +140,16 @@ function htmlToText(html: string): string {
     .replace(/\s+/g, ' ')
 }
 
+const FOUNDER_ROLE = /\b(co-?founder|founder|ceo|cto)\b/i
+const escapeRe = (t: string): string => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+const hasWord = (haystack: string, word: string): boolean =>
+  new RegExp(`(?<![\\p{L}\\p{N}])${escapeRe(word)}(?![\\p{L}\\p{N}])`, 'u').test(haystack)
+// The address as a whole token, not a tail or head of a longer address ("are@acme.com" inside "software@acme.com").
+const appearsLiterally = (haystack: string, email: string): boolean =>
+  new RegExp(`(?<![A-Za-z0-9._%+-])${escapeRe(email)}(?![A-Za-z0-9-]|\\.[A-Za-z0-9])`).test(
+    haystack
+  )
+
 // Local part lowercased, ignoring a +tag suffix.
 const localOf = (email: string): string =>
   email.slice(0, email.lastIndexOf('@')).toLowerCase().split('+')[0]
@@ -180,7 +190,8 @@ export async function findContacts(
     const text = deobfuscateEmails(raw)
     const lowerText = text.toLowerCase()
     for (const email of extractEmails(raw)) {
-      if (COMMON_WORD_LOCALPARTS.includes(localOf(email)) && !rawLower.includes(email)) continue
+      if (COMMON_WORD_LOCALPARTS.includes(localOf(email)) && !appearsLiterally(rawLower, email))
+        continue
       const idx = lowerText.indexOf(email)
       const context =
         idx >= 0 ? text.slice(Math.max(0, idx - WINDOW), idx + email.length + WINDOW) : ''
@@ -220,8 +231,14 @@ export async function findContacts(
       for (const p of res.people) {
         const email = p.email.trim().toLowerCase()
         // an address the model returns that was not found in the text is discarded
-        if (people.some((x) => x.email === email))
-          links.set(email, { name: p.name || null, role: p.role || null })
+        const own = people.find((x) => x.email === email)
+        if (!own) continue
+        // a window on a dense team page can include a neighbour: keep only what this person's own text supports
+        const ctx = own.context.toLowerCase()
+        const first = p.name?.trim().split(/s+/)[0]?.toLowerCase()
+        const name = first && first.length >= 2 && hasWord(ctx, first) ? p.name!.trim() : null
+        const role = p.role && ctx.includes(p.role.trim().toLowerCase()) ? p.role.trim() : null
+        links.set(email, { name, role })
       }
     } catch (e) {
       // unlinked contacts are still valid; only the name and role are lost
@@ -239,8 +256,7 @@ export async function findContacts(
         email: f.email,
         name: link?.name ?? null,
         role,
-        kind:
-          kind === 'person' && role && /founder|ceo|cto|co-founder/i.test(role) ? 'founder' : kind,
+        kind: kind === 'person' && role && FOUNDER_ROLE.test(role) ? 'founder' : kind,
         sourceUrl: f.sourceUrl
       }
     })
