@@ -12,16 +12,19 @@ import { createSmtpSender, MailAuthError, MailSendError } from '../../../src/mai
 let server: SMTPServer
 let received: ParsedMail[]
 let cfg: MailSettings
-const plain = { tls: { rejectUnauthorized: false } }
+const plain = { insecurePlaintextForTests: true }
+let authCalls = 0
 
 beforeEach(async () => {
   received = []
+  authCalls = 0
   server = new SMTPServer({
     secure: false,
     disabledCommands: ['STARTTLS'],
     allowInsecureAuth: true,
     authOptional: false,
     onAuth(auth, _s, cb) {
+      authCalls++
       if (auth.password === 'pw') cb(null, { user: auth.username })
       else cb(new Error('Invalid login'))
     },
@@ -100,6 +103,28 @@ describe('smtp sender', () => {
     const err = await createSmtpSender({ ...cfg, smtpPort: 1 }, 'pw', plain).send(base).catch((e) => e)
     expect(err).toBeInstanceOf(MailSendError)
     expect(err).not.toBeInstanceOf(MailAuthError)
+    expect(err.message).toBe('Could not reach 127.0.0.1:1.')
+    expect(err.cause).toBeDefined()
+    const v = await createSmtpSender({ ...cfg, smtpPort: 1 }, 'pw', plain).verify().catch((e) => e)
+    expect(v.message).toBe('Could not reach 127.0.0.1:1.')
+  })
+
+  it('rejected recipient gets a plain sentence', async () => {
+    const s2 = new SMTPServer({ secure: false, disabledCommands: ['STARTTLS'], allowInsecureAuth: true, onAuth: (_a, _s, cb) => cb(null, { user: 'u' }), onRcptTo: (_a, _s, cb) => cb(new Error('no such user secret-text')) })
+    await new Promise<void>((r) => s2.listen(0, '127.0.0.1', r))
+    const err = await createSmtpSender({ ...cfg, smtpPort: (s2.server.address() as AddressInfo).port }, 'pw', plain).send(base).catch((e) => e)
+    await new Promise<void>((r) => s2.close(() => r()))
+    expect(err).toBeInstanceOf(MailSendError)
+    expect(err.message).toBe('The server rejected the recipient address.')
+    expect(err.message).not.toContain('secret-text')
+  })
+
+  it('production mode refuses plaintext: no AUTH is ever sent', async () => {
+    const err = await createSmtpSender(cfg, 'pw').send(base).catch((e) => e)
+    expect(err).toBeInstanceOf(MailSendError)
+    expect(err).not.toBeInstanceOf(MailAuthError)
+    expect(received).toHaveLength(0)
+    expect(authCalls).toBe(0)
   })
 })
 

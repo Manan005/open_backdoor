@@ -17,32 +17,51 @@ export class MailAuthError extends Error {
   constructor(message = 'Mail server rejected the login') { super(message); this.name = 'MailAuthError' }
 }
 export class MailSendError extends Error {
-  constructor(message: string) { super(message); this.name = 'MailSendError' }
+  constructor(message: string, cause?: unknown) {
+    super(message, cause === undefined ? undefined : { cause })
+    this.name = 'MailSendError'
+  }
 }
 
 const SIMPLE_ADDRESS = /^[^\s@<>(),;:"\[\]]+@[^\s@<>(),;:"\[\]]+\.[^\s@<>(),;:"\[\]]+$/
+const UNREACHABLE = new Set(['ECONNECTION', 'ETIMEDOUT', 'ECONNREFUSED', 'EDNS', 'ENOTFOUND', 'ESOCKETTIMEDOUT'])
+const TIMEOUT_MS = 20_000
 
 function isAuthFailure(e: unknown): boolean {
   const err = e as { code?: string; responseCode?: number }
   return err?.code === 'EAUTH' || err?.responseCode === 535
 }
 
-function wrap(e: unknown): Error {
+// Messages are fixed sentences plus host/port; server text is never echoed (it could contain credentials).
+// The original error is kept as `cause` for logging only.
+function wrap(e: unknown, cfg: MailSettings, verifying: boolean): Error {
   if (isAuthFailure(e)) return new MailAuthError()
-  // Only the error code is surfaced; server text could echo credentials.
-  const code = (e as { code?: string })?.code
-  return new MailSendError(code ? `Sending failed (${code})` : 'Sending failed')
+  const err = e as { code?: string; message?: string }
+  const code = err?.code
+  let message: string
+  const text = err?.message ?? ''
+  if ((code && UNREACHABLE.has(code)) || (code === 'ESOCKET' && /ECONNREFUSED|ENOTFOUND|ETIMEDOUT|EHOSTUNREACH|ENETUNREACH|EAI_AGAIN/.test(text))) message = `Could not reach ${cfg.smtpHost}:${cfg.smtpPort}.`
+  else if (code === 'ETLS' || (code === 'ESOCKET' && /tls|ssl|certificate|starttls|self.signed|wrong version/i.test(text))) {
+    message = `Secure connection to ${cfg.smtpHost} failed.`
+  } else if (code === 'EENVELOPE') message = 'The server rejected the recipient address.'
+  else message = `${verifying ? 'Could not connect' : 'Sending failed'}${code ? ` (${code})` : ''}.`
+  return new MailSendError(message, e)
 }
 
-export function createSmtpSender(cfg: MailSettings, password: string, opts?: { tls?: { rejectUnauthorized: boolean } }): MailSender {
+/** `opts.insecurePlaintextForTests` talks plain SMTP to a local test server. Never set it in production. */
+export function createSmtpSender(cfg: MailSettings, password: string, opts?: { insecurePlaintextForTests?: boolean }): MailSender {
   const domain = cfg.address.slice(cfg.address.lastIndexOf('@') + 1)
-  // opts.tls is the test-only path for a plain local server; production never allows plaintext auth.
+  const common = {
+    host: cfg.smtpHost, port: cfg.smtpPort, auth: { user: cfg.address, pass: password },
+    connectionTimeout: TIMEOUT_MS, greetingTimeout: TIMEOUT_MS, socketTimeout: TIMEOUT_MS
+  }
+  // Production never allows plaintext auth: 465 is implicit TLS, anything else must upgrade via STARTTLS.
   const transport = nodemailer.createTransport(
-    opts?.tls
-      ? { host: cfg.smtpHost, port: cfg.smtpPort, secure: false, ignoreTLS: true, tls: opts.tls, auth: { user: cfg.address, pass: password } }
+    opts?.insecurePlaintextForTests
+      ? { ...common, secure: false, ignoreTLS: true }
       : cfg.smtpPort === 465
-        ? { host: cfg.smtpHost, port: cfg.smtpPort, secure: true, auth: { user: cfg.address, pass: password } }
-        : { host: cfg.smtpHost, port: cfg.smtpPort, secure: false, requireTLS: true, auth: { user: cfg.address, pass: password } }
+        ? { ...common, secure: true }
+        : { ...common, secure: false, requireTLS: true }
   )
 
   return {
@@ -62,12 +81,12 @@ export function createSmtpSender(cfg: MailSettings, password: string, opts?: { t
           ...(m.attachmentPath ? { attachments: [{ filename: basename(m.attachmentPath), path: m.attachmentPath }] } : {})
         })
       } catch (e) {
-        throw wrap(e)
+        throw wrap(e, cfg, false)
       }
       return { messageId, at: new Date().toISOString() }
     },
     async verify() {
-      try { await transport.verify() } catch (e) { throw wrap(e) }
+      try { await transport.verify() } catch (e) { throw wrap(e, cfg, true) }
     }
   }
 }
