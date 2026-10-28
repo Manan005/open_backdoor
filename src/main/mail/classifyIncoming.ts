@@ -38,6 +38,14 @@ function failedRecipients(mail: ParsedMail): string[] {
   return m ? [m[1]] : []
 }
 
+/** Delivery-status verdict: true = permanent failure, false = delay or other non-failure, null = no report fields at all. */
+function permanentFailure(mail: ParsedMail): boolean | null {
+  const action = /^Action:\s*(\w+)/im.exec(mail.text)?.[1]?.toLowerCase()
+  const status = /^Status:\s*(\d)\.\d+\.\d+/im.exec(mail.text)?.[1]
+  if (action === undefined && status === undefined) return null
+  return action === 'failed' || status === '5'
+}
+
 function isAutoReply(mail: ParsedMail): boolean {
   const h = mail.headers
   const auto = h['auto-submitted']
@@ -54,11 +62,16 @@ export function classifyIncoming(mail: ParsedMail, lookup: ClassifyLookup, ownOu
   }
 
   if (isBounce(mail)) {
-    for (const failedRecipient of failedRecipients(mail)) {
+    // A delay notice (Action: delayed / Status 4.x.x) is not a bounce; the message may still be delivered.
+    if (permanentFailure(mail) === false) return UNRELATED
+    const failed = failedRecipients(mail).map((r) => r.toLowerCase())
+    for (const failedRecipient of failed) {
       const lead = lookup.byContactEmail(failedRecipient)[0]
-      if (lead) return { kind: 'bounce', leadId: lead.id, failedRecipient: failedRecipient.toLowerCase(), mail }
+      if (lead) return { kind: 'bounce', leadId: lead.id, failedRecipient, mail }
     }
-    return UNRELATED
+    // The failed address may differ from the stored contact (alias, forward); fall back to the thread.
+    const hit = threadMessage(mail, lookup)
+    return hit ? { kind: 'bounce', leadId: hit.leadId, failedRecipient: failed[0] ?? '', mail } : UNRELATED
   }
 
   // Thread headers first: a co-founder or a personal address still matches. Sender address is only a fallback.

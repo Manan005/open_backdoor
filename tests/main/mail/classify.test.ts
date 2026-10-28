@@ -62,6 +62,22 @@ describe('classifyIncoming', () => {
     const c = classifyIncoming({ ...m, headers }, lookup, ownIds)
     expect(c).toMatchObject({ kind: 'bounce', leadId: 2, failedRecipient: 'gone@deadstartup.example' })
   })
+  it('gmail delay notice is unrelated, not a bounce', async () => {
+    const c = classifyIncoming(await parseMail(fx('delay-gmail.eml'), 'inbox'), lookup, ownIds)
+    expect(c).toEqual({ kind: 'unrelated' })
+  })
+  it('plain mailer-daemon text without a delivery-status part is a bounce', async () => {
+    const m = await parseMail(fx('bounce-gmail.eml'), 'inbox')
+    const c = classifyIncoming({ ...m, text: 'Address not found: gone@deadstartup.example', headers: { 'x-failed-recipients': 'gone@deadstartup.example' } }, lookup, ownIds)
+    expect(c).toMatchObject({ kind: 'bounce', leadId: 2 })
+  })
+  it('bounce with an unknown recipient falls back to the thread and lowercases', async () => {
+    const m = await parseMail(fx('bounce-gmail.eml'), 'inbox')
+    const c = classifyIncoming({ ...m, headers: { ...m.headers, 'x-failed-recipients': 'Alias@Other.example' }, text: 'Action: failed' }, lookup, ownIds)
+    expect(c).toMatchObject({ kind: 'bounce', leadId: 2, failedRecipient: 'alias@other.example' })
+    const upper = classifyIncoming({ ...m, headers: { ...m.headers, 'x-failed-recipients': 'GONE@deadstartup.example' } }, lookup, ownIds)
+    expect(upper).toMatchObject({ kind: 'bounce', failedRecipient: 'gone@deadstartup.example' })
+  })
   it('ooo detected by Auto-Submitted header', async () => {
     const c = classifyIncoming(await parseMail(fx('ooo.eml'), 'inbox'), lookup, ownIds)
     expect(c).toMatchObject({ kind: 'ooo', leadId: 1 })
@@ -90,8 +106,8 @@ describe('testMailbox', () => {
   it('never throws', async () => {
     const { testMailbox } = await import('../../../src/main/mail/imapReader')
     const sender = { send: async () => ({ messageId: '<x@y>', at: '' }), verify: async () => {} }
-    expect(await testMailbox(sender, { fetchNew: async () => [], verify: async () => {} }, 'a@b.co')).toEqual({ ok: true })
-    const bad = { fetchNew: async () => [], verify: async () => { throw new Error('IMAP down') } }
+    expect(await testMailbox(sender, { fetchNew: async () => [], commit: () => {}, verify: async () => {} }, 'a@b.co')).toEqual({ ok: true })
+    const bad = { fetchNew: async () => [], commit: () => {}, verify: async () => { throw new Error('IMAP down') } }
     expect(await testMailbox(sender, bad, 'a@b.co')).toEqual({ ok: false, error: 'IMAP down' })
     const badSend = { ...sender, send: async () => { throw new Error('nope') } }
     expect(await testMailbox(badSend, bad, 'a@b.co')).toEqual({ ok: false, error: 'nope' })

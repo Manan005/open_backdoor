@@ -9,7 +9,12 @@ export interface ParsedMail {
   from: string; to: string[]; subject: string; text: string; date: string
   headers: Record<string, string>; mailbox: 'inbox' | 'sent'
 }
-export interface MailReader { fetchNew(): Promise<ParsedMail[]>; verify(): Promise<void> }
+/**
+ * `fetchNew()` reads INBOX and Sent and persists nothing; it throws if either mailbox fails.
+ * `commit()` persists the cursors computed by the last successful `fetchNew()`; call it only after
+ * the returned mail has been handled. Mail fetched again after a missed commit is deduped by Message-ID.
+ */
+export interface MailReader { fetchNew(): Promise<ParsedMail[]>; commit(): void; verify(): Promise<void> }
 
 /** `<id>` form: trimmed, brackets added when missing. */
 function bracket(id: string): string {
@@ -101,10 +106,13 @@ export function createImapReader(cfg: MailSettings, password: string, meta: Meta
     return client
   }
 
+  let pending: { key: string; uid: number; validityKey: string; uidValidity: number }[] = []
+
   async function readMailbox(client: ImapFlow, path: string, mailbox: 'inbox' | 'sent'): Promise<ParsedMail[]> {
     const lock = await client.getMailboxLock(path, { readOnly: true })
     try {
       const uidValidity = Number(client.mailbox ? client.mailbox.uidValidity : 0)
+      const uidNext = Number(client.mailbox ? client.mailbox.uidNext : 1)
       const lastKey = `imap.lastUid.${mailbox}`, validityKey = `imap.uidValidity.${mailbox}`
       const stored = meta.get<number>(lastKey)
       const valid = stored !== null && meta.get<number>(validityKey) === uidValidity
@@ -116,11 +124,17 @@ export function createImapReader(cfg: MailSettings, password: string, meta: Meta
       const fresh = (found || []).filter((u) => u > last).sort((a, b) => a - b)
       const out: ParsedMail[] = []
       for (const uid of fresh) {
-        const msg = await client.fetchOne(String(uid), { source: true }, { uid: true })
-        if (msg && msg.source) out.push(await parseMail(msg.source, mailbox))
+        try {
+          const msg = await client.fetchOne(String(uid), { source: true }, { uid: true })
+          if (msg && msg.source) out.push(await parseMail(msg.source, mailbox))
+        } catch (e) {
+          if (isAuthFailure(e)) throw e
+          // One unparsable message must not block the cursor forever; skip it.
+        }
       }
-      meta.set(lastKey, fresh.length ? fresh[fresh.length - 1] : last)
-      meta.set(validityKey, uidValidity)
+      // A quiet reset stores the highest existing UID so the next poll doesn't download the whole mailbox.
+      const cursor = fresh.length ? fresh[fresh.length - 1] : valid ? last : Math.max(uidNext - 1, 0)
+      pending.push({ key: lastKey, uid: cursor, validityKey, uidValidity })
       return out
     } finally {
       lock.release()
@@ -139,13 +153,19 @@ export function createImapReader(cfg: MailSettings, password: string, meta: Meta
         await client.logout().catch(() => {})
       }
     },
+    commit() {
+      for (const p of pending) { meta.set(p.key, p.uid); meta.set(p.validityKey, p.uidValidity) }
+      pending = []
+    },
     async fetchNew() {
+      pending = []
       const client = await open()
       try {
         const inbox = await readMailbox(client, 'INBOX', 'inbox')
         const sent = await readMailbox(client, cfg.sentMailbox, 'sent')
         return [...inbox, ...sent]
       } catch (e) {
+        pending = []
         throw isAuthFailure(e) ? new MailAuthError() : e
       } finally {
         await client.logout().catch(() => {})
