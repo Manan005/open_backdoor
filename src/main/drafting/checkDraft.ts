@@ -23,6 +23,11 @@ const MAX_SUBJECT = 80
 const collapse = (s: string): string => s.replace(/\s+/g, ' ').trim()
 const escapeRegex = (s: string): string => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
+// "Re: " + the original subject with any existing Re: prefixes stripped.
+export function followUpSubject(original: string): string {
+  return `Re: ${original.replace(/^(\s*re:\s*)+/i, '').trim()}`
+}
+
 export function wordCount(body: string): number {
   const t = body.trim()
   return t === '' ? 0 : t.split(/\s+/).length
@@ -74,11 +79,12 @@ export function checkDraft(
 
   const subject = d.subject.trim()
   let subjectBad = subject === '' || subject.length > MAX_SUBJECT || PLACEHOLDER.test(subject)
+  if (/[\u0000-\u001f\u007f-\u009f\u2028\u2029]/.test(d.subject)) subjectBad = true
   if (!subjectBad && ctx.kind === 'followup') {
-    subjectBad =
-      ctx.originalSubject !== undefined
-        ? subject !== `Re: ${ctx.originalSubject.trim()}`
-        : !subject.startsWith('Re: ')
+    const orig = ctx.originalSubject?.trim() ?? ''
+    subjectBad = orig
+      ? subject.toLowerCase() !== followUpSubject(orig).toLowerCase()
+      : !/^re:/i.test(subject)
   }
   if (subjectBad) failures.push('subject')
 
