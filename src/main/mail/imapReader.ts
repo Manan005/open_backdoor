@@ -124,17 +124,18 @@ export function createImapReader(cfg: MailSettings, password: string, meta: Meta
       const fresh = (found || []).filter((u) => u > last).sort((a, b) => a - b)
       const out: ParsedMail[] = []
       for (const uid of fresh) {
+        // Transport errors from fetchOne propagate (fetchNew then persists nothing); `false` means the message was expunged.
+        const msg = await client.fetchOne(String(uid), { source: true }, { uid: true })
+        if (!msg || !msg.source) continue
         try {
-          const msg = await client.fetchOne(String(uid), { source: true }, { uid: true })
-          if (msg && msg.source) out.push(await parseMail(msg.source, mailbox))
-        } catch (e) {
-          if (isAuthFailure(e)) throw e
+          out.push(await parseMail(msg.source, mailbox))
+        } catch {
           // One unparsable message must not block the cursor forever; skip it.
         }
       }
       // A quiet reset stores the highest existing UID so the next poll doesn't download the whole mailbox.
-      const cursor = fresh.length ? fresh[fresh.length - 1] : valid ? last : Math.max(uidNext - 1, 0)
-      pending.push({ key: lastKey, uid: cursor, validityKey, uidValidity })
+      const cursor = fresh.length ? fresh[fresh.length - 1] : valid ? last : Number.isFinite(uidNext) ? Math.max(uidNext - 1, 0) : null
+      if (cursor !== null) pending.push({ key: lastKey, uid: cursor, validityKey, uidValidity })
       return out
     } finally {
       lock.release()
